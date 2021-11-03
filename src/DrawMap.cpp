@@ -1,15 +1,15 @@
 #include <array>
 #include <SFML/Graphics.hpp>
 
-#include "Headers/DrawMap.hpp"
 #include "Headers/Global.hpp"
+#include "Headers/DrawMap.hpp"
 
 void draw_map(const std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH>& i_map, sf::RenderWindow& i_window)
 {
     sf:: Sprite sprite;
     sf:: Texture texture;
 
-    texture.loadFromFile("Resources/Images/Map" + std::to_string(CELL_SIZE) + ".png");
+    texture.loadFromFile("src/Resources/Images/Map" + std::to_string(CELL_SIZE) + ".png");
     sprite.setTexture(texture);
 
     for(int a=0; a < MAP_WIDTH; a++)

@@ -68,7 +68,7 @@ void Ghost::draw(bool i_flash, sf::RenderWindow& i_window)
     sf::Sprite face;
     sf::Texture texture;
 
-    texture.loadFromFile("Resources/Images/Ghost" + std::to_string(CELL_SIZE) + ".png");
+    texture.loadFromFile("src/Resources/Images/Ghost" + std::to_string(CELL_SIZE) + ".png");
     body.setTexture(texture);
     body.setPosition(position.x, position.y);
     body.setTextureRect(sf::IntRect(CELL_SIZE * body_frame, 0, CELL_SIZE, CELL_SIZE));
@@ -76,7 +76,7 @@ void Ghost::draw(bool i_flash, sf::RenderWindow& i_window)
     face.setTexture(texture);
     face.setPosition(position.x, position.y);
 
-    if(!frightened_mode)
+    if(frightened_mode == 0)
     {   
         switch (id)
         {
@@ -106,7 +106,7 @@ void Ghost::draw(bool i_flash, sf::RenderWindow& i_window)
         i_window.draw(body);
     }
 
-    else if (frightened_mode)
+    else if (frightened_mode == 1)
     {
         body.setColor(sf::Color(36,36,255));
         face.setTextureRect(sf::IntRect(4 * CELL_SIZE, CELL_SIZE, CELL_SIZE, CELL_SIZE));
@@ -174,12 +174,12 @@ void Ghost::update(int i_level, std::array<std::array<Cell, MAP_HEIGHT>, MAP_WID
 
     std::array<bool, 4> walls{};
 
-    if(frightened_mode && i_pacman.get_energizer_timer() == ENERGIZER_DURATION / pow(2, i_level))
+    if(frightened_mode == 0 && i_pacman.get_energizer_timer() == ENERGIZER_DURATION / pow(2, i_level))
     {
         frightened_speed_timer = GHOST_FRIGHTENED_SPEED;
         frightened_mode = 1;
     }
-    else if(!i_pacman.get_energizer_timer() && frightened_mode)
+    else if(i_pacman.get_energizer_timer() == 0 && frightened_mode == 1)
     {
         frightened_mode = 0;
     }
@@ -196,7 +196,7 @@ void Ghost::update(int i_level, std::array<std::array<Cell, MAP_HEIGHT>, MAP_WID
     walls[2] = map_collision(0, use_door, position.x - speed, position.y, i_map);
     walls[3] = map_collision(0, use_door, position.x, speed + position.y, i_map);
 
-    if(!frightened_mode)
+    if(frightened_mode != 1)
     {
         int optimal_direction = 4;
         move = 1;
@@ -244,7 +244,7 @@ void Ghost::update(int i_level, std::array<std::array<Cell, MAP_HEIGHT>, MAP_WID
     {
         int random_direction = rand() % 4;
 
-        if(!frightened_speed_timer)
+        if(frightened_speed_timer == 0)
         {
             move = 1;
             frightened_speed_timer = GHOST_FRIGHTENED_SPEED;
@@ -261,7 +261,7 @@ void Ghost::update(int i_level, std::array<std::array<Cell, MAP_HEIGHT>, MAP_WID
                 }
             }
 
-            if( available_ways < 0)
+            if( available_ways > 0)
             {
                 while (walls[random_direction] == 1 || random_direction == (direction + 2) % 4)
                 {
@@ -280,7 +280,7 @@ void Ghost::update(int i_level, std::array<std::array<Cell, MAP_HEIGHT>, MAP_WID
         }
     }
 
-    if(move)
+    if(move == 1)
     {
         switch (direction)
         {
@@ -316,9 +316,9 @@ void Ghost::update(int i_level, std::array<std::array<Cell, MAP_HEIGHT>, MAP_WID
         }
     }
 
-    if(pacman_collision(i_pacman.get_position()))
+    if(pacman_collision(i_pacman.get_position()) == 1)
     {
-        if(frightened_mode)
+        if(frightened_mode == 0)
         {
             i_pacman.set_dead(1);
         }
@@ -334,7 +334,7 @@ void Ghost::update(int i_level, std::array<std::array<Cell, MAP_HEIGHT>, MAP_WID
 
 void Ghost::update_target(int i_pacman_direction, const Position& i_ghost_0_position, const Position& i_pacman_position)
 {
-    if(use_door)
+    if(use_door == 1)
     {
         if(position == target)
         {
@@ -351,7 +351,7 @@ void Ghost::update_target(int i_pacman_direction, const Position& i_ghost_0_posi
     }
     else
     {
-        if(!movement_mode)
+        if(movement_mode == 0)
         {
             switch (id)
             {

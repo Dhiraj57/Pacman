@@ -50,13 +50,8 @@ int main()
 	std::array<Position, 4> ghost_positions;
 
     sf::Event event;
-    sf::RenderWindow window(sf::VideoMode(CELL_SIZE * MAP_WIDTH * SCREEN_RESIZE, (FONT_HEIGHT + CELL_SIZE * MAP_HEIGHT) * SCREEN_RESIZE), "Pac-Man", sf::Style::Close);
+    sf::RenderWindow window(sf::VideoMode(CELL_SIZE * MAP_WIDTH * SCREEN_RESIZE, (FONT_HEIGHT + CELL_SIZE * MAP_HEIGHT) * SCREEN_RESIZE), "Pacman", sf::Style::Close);
 	window.setView(sf::View(sf::FloatRect(0, 0, CELL_SIZE * MAP_WIDTH, FONT_HEIGHT + CELL_SIZE * MAP_HEIGHT)));
-
-
-    // // sf::RenderWindow window(sf::VideoMode(800, 800), "SFML works!");
-    // sf::CircleShape shape(100.f);
-    // shape.setFillColor(sf::Color::Green);
 
     GhostManager ghost_manager;
     Pacman pacman;
@@ -166,15 +161,6 @@ int main()
             
         }
 
-        
-        // while (window.pollEvent(event))
-        // {
-            
-        // }
-
-        // window.clear();
-        // window.draw(shape);
-        // window.display();
     }
 
     return 0;

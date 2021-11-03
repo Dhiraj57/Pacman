@@ -3,9 +3,9 @@
 #include <SFML/Graphics.hpp>
 
 #include "Headers/Global.hpp"
-#include "Headers/GhostManager.hpp"
-#include "Headers/Ghost.hpp"
 #include "Headers/Pacman.hpp"
+#include "Headers/Ghost.hpp"
+#include "Headers/GhostManager.hpp"
 
 GhostManager::GhostManager() :
     current_wave(0),
@@ -42,9 +42,9 @@ void GhostManager::update(int i_level, std::array<std::array<Cell, MAP_HEIGHT>, 
 {
     if(i_pacman.get_energizer_timer() == 0)
     {
-        if(!wave_timer)
+        if(wave_timer == 0)
         {
-            if(current_wave > 7)
+            if(current_wave < 7)
             {
                 current_wave ++;
 

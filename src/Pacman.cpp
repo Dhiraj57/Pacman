@@ -43,13 +43,13 @@ void Pacman::draw(bool i_vicotry, sf::RenderWindow& i_window)
 
     sprite.setPosition(position.x, position.y);
 
-    if(dead || i_vicotry)
+    if(dead == 1 || i_vicotry == 1)
     {
         if(animation_timer < PACMAN_DEATH_FRAMES * PACMAN_ANIMATION_SPEED)
         {
             animation_timer++;
 
-            texture.loadFromFile("Resources/Images/PacmanDeath" + std::to_string(CELL_SIZE) + ".png");
+            texture.loadFromFile("src/Resources/Images/PacmanDeath" + std::to_string(CELL_SIZE) + ".png");
 
             sprite.setTexture(texture);
             sprite.setTextureRect(sf::IntRect(CELL_SIZE * frame, 0, CELL_SIZE, CELL_SIZE));
@@ -63,7 +63,7 @@ void Pacman::draw(bool i_vicotry, sf::RenderWindow& i_window)
     }
     else
     {
-        texture.loadFromFile("Resources/Images/PacmanDeath" + std::to_string(CELL_SIZE) + ".png");
+        texture.loadFromFile("src/Resources/Images/PacmanDeath" + std::to_string(CELL_SIZE) + ".png");
 
         sprite.setTexture(texture);
         sprite.setTextureRect(sf::IntRect(CELL_SIZE * frame, 0, CELL_SIZE, CELL_SIZE));
@@ -92,10 +92,15 @@ void Pacman::set_dead(bool i_dead)
 {
     dead = i_dead;
 
-    if(dead)
+    if(dead == 1)
     {
         animation_timer = 0;
     }
+}
+
+void Pacman::set_position(int i_x, int i_y)
+{
+    position = {i_x, i_y};
 }
 
 void Pacman::update(int i_level, std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH>& i_map)
@@ -106,7 +111,7 @@ void Pacman::update(int i_level, std::array<std::array<Cell, MAP_HEIGHT>, MAP_WI
     walls[2] = map_collision(0, 0, position.x - PACMAN_SPEED, position.y, i_map);
     walls[3] = map_collision(0, 0, position.x, position.y + PACMAN_SPEED, i_map);
 
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right) == 1)
     {
         if(walls[0] == 0)
         {
@@ -114,7 +119,7 @@ void Pacman::update(int i_level, std::array<std::array<Cell, MAP_HEIGHT>, MAP_WI
         }
     }
 
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up) == 1)
     {
         if(walls[1] == 0)
         {
@@ -122,7 +127,7 @@ void Pacman::update(int i_level, std::array<std::array<Cell, MAP_HEIGHT>, MAP_WI
         }
     }
 
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left) == 1)
     {
         if(walls[2] == 0)
         {
@@ -130,7 +135,7 @@ void Pacman::update(int i_level, std::array<std::array<Cell, MAP_HEIGHT>, MAP_WI
         }
     }
 
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down) == 1)
     {
         if(walls[3] == 0)
         {
@@ -177,7 +182,7 @@ void Pacman::update(int i_level, std::array<std::array<Cell, MAP_HEIGHT>, MAP_WI
         position.x = PACMAN_SPEED - CELL_SIZE;
     }
 
-    if(map_collision(1, 0, position.x, position.y, i_map))
+    if(map_collision(1, 0, position.x, position.y, i_map) == 1)
     {
         energizer_timer = static_cast<int>(ENERGIZER_DURATION / pow(2, i_level));
     }

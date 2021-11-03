@@ -49,13 +49,13 @@ bool map_collision(bool i_collect_pellets, bool i_use_door, int i_x, int i_y, st
 
         if(x >= 0 && y >= 0 && x < MAP_WIDTH && y < MAP_HEIGHT)
         {
-            if(!i_collect_pellets)
+            if(i_collect_pellets == 0)
             {
                 if(Cell::Wall == i_map[x][y])
                 {
                     output = 1;
                 }
-                else if (i_use_door && Cell::Door == i_map[x][y])
+                else if (i_use_door == 0 && Cell::Door == i_map[x][y])
                 {
                     output = 1;
                 }  

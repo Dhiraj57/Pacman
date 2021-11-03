@@ -14,7 +14,7 @@ void draw_text(bool i_center, int i_x, int i_y, const std::string& i_text, sf::R
     sf::Sprite character_sprite;
     sf::Texture font_texture;
 
-    font_texture.loadFromFile("Resources/Images/Font.png");
+    font_texture.loadFromFile("src/Resources/Images/Font.png");
 
     character_width = font_texture.getSize().x / 96;
     character_sprite.setTexture(font_texture);
