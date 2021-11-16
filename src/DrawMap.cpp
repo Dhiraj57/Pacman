@@ -4,40 +4,48 @@
 #include "Headers/Global.hpp"
 #include "Headers/DrawMap.hpp"
 
+// Drawing map to the window.
 void draw_map(const std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH>& i_map, sf::RenderWindow& i_window)
 {
     sf:: Sprite sprite;
     sf:: Texture texture;
 
+    // Setting 'map' texture to the sprite.
     texture.loadFromFile("src/Resources/Images/Map" + std::to_string(CELL_SIZE) + ".png");
     sprite.setTexture(texture);
 
+    // We check cell type for complete grid and draw the sprite accordingly.
     for(int a=0; a < MAP_WIDTH; a++)
     {
         for(int b=0; b < MAP_HEIGHT; b++)
         {
             sprite.setPosition(static_cast<float>(CELL_SIZE * a), static_cast<float>(CELL_SIZE * b));
 
+            // We just crop out what we need from the texture.
             switch (i_map[a][b])
             {
                 case Cell::Door:
                 {
+                    // Instead of creating different texutre for different parts, we created single texture and we display part of it using setTextureRect() function.
                     sprite.setTextureRect(sf::IntRect(2 * CELL_SIZE, CELL_SIZE, CELL_SIZE, CELL_SIZE));
                     i_window.draw(sprite);
                     break;
                 }
+
                 case Cell::Energizer:
                 {
                     sprite.setTextureRect(sf::IntRect(CELL_SIZE, CELL_SIZE, CELL_SIZE, CELL_SIZE));
                     i_window.draw(sprite);
                     break;
                 }
+
                 case Cell::Pellet:
                 {
                     sprite.setTextureRect(sf::IntRect(0, CELL_SIZE, CELL_SIZE, CELL_SIZE));
                     i_window.draw(sprite);
                     break;
                 }
+
                 case Cell::Wall:
                 {
                     bool down = 0;

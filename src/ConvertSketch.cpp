@@ -6,10 +6,12 @@
 #include "Headers/Pacman.hpp"
 #include "Headers/ConvertSketch.hpp"
 
+// Converting string sketch into map.
 std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH> convert_sketch(const std::array<std::string, MAP_HEIGHT>& i_map_sketch, std::array<Position, 4>& i_ghost_positions, Pacman& i_pacman)
 {
-    std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH> output_map{};
+    std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH> output_map{}; 
 
+    // Filling grid positions by cell type as per sketch.
     for(int a=0; a < MAP_HEIGHT; a++)
     {
         for(int b=0; b < MAP_WIDTH; b++)
@@ -34,6 +36,7 @@ std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH> convert_sketch(const std::ar
                     break;
                 }
 
+                // Setting positions of ghosts as per sketch.
                 case '0': // Red ghost
                 {
                     i_ghost_positions[0].x = CELL_SIZE * b;
@@ -65,7 +68,7 @@ std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH> convert_sketch(const std::ar
                     break;
                 }
 
-                case 'o':
+                case 'o': // Energizer
                 {
                     output_map[b][a] = Cell::Energizer;
                     break;

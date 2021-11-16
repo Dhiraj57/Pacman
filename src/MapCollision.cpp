@@ -1,5 +1,6 @@
 #include <array>
 #include <cmath>
+#include <SFML/Audio.hpp>
 
 #include "Headers/Global.hpp"
 #include "Headers/MapCollision.hpp"
@@ -8,9 +9,11 @@ bool map_collision(bool i_collect_pellets, bool i_use_door, int i_x, int i_y, st
 {
     bool output = 0;
 
+    // Getting the exact position.
     float cell_x = i_x / static_cast<float>(CELL_SIZE);
     float cell_y = i_y / static_cast<float>(CELL_SIZE);
 
+    // To loop through all possible positions that Pacman/Ghost can move to. i.e Checking cells from all 4 directions.
     for(int a=0; a<4; a++)
     {
         int x = 0;
@@ -47,9 +50,10 @@ bool map_collision(bool i_collect_pellets, bool i_use_door, int i_x, int i_y, st
             }
         }
 
+        // Making sure that the position is inside the map.
         if(x >= 0 && y >= 0 && x < MAP_WIDTH && y < MAP_HEIGHT)
         {
-            if(i_collect_pellets == 0)
+            if(i_collect_pellets == 0) // Here we only care about the walls.
             {
                 if(Cell::Wall == i_map[x][y])
                 {
@@ -60,7 +64,7 @@ bool map_collision(bool i_collect_pellets, bool i_use_door, int i_x, int i_y, st
                     output = 1;
                 }  
             }
-            else
+            else // Here we only care about the collectables.
             {
                 if(Cell::Energizer == i_map[x][y])
                 {
@@ -69,6 +73,7 @@ bool map_collision(bool i_collect_pellets, bool i_use_door, int i_x, int i_y, st
                 }
                 else if(Cell::Pellet == i_map[x][y])
                 {
+                    
                     i_map[x][y] = Cell::Empty;
                 }
             }

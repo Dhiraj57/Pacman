@@ -3,6 +3,7 @@
 #include <chrono>
 #include <ctime>
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 
 #include "src/Headers/Global.hpp"
 #include "src/Headers/Pacman.hpp"
@@ -19,9 +20,10 @@ int main()
     int lag = 0;
     int level = 0;
 
-    //Similar to lag, used to make the game framerate-independent.
+    //To make the game framerate-independent.
 	std::chrono::time_point<std::chrono::steady_clock> previous_time;
 
+    // Sketch which we convert into map.
     std::array<std::string, MAP_HEIGHT> map_sketch = {
 		" ################### ",
 		" #........#........# ",
@@ -46,7 +48,10 @@ int main()
 		" ################### "
 	};
 
+    // Converted map. (2D grid of cells)
     std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH> map{};
+
+    // Initial ghost positions.
 	std::array<Position, 4> ghost_positions;
 
     sf::Event event;
@@ -61,19 +66,22 @@ int main()
     map = convert_sketch(map_sketch, ghost_positions, pacman);
     ghost_manager.reset(level, ghost_positions);
 
-    //Get the current time and store it in a variable.
+    // Previous time point to calculate the lag.
 	previous_time = std::chrono::steady_clock::now();
 
     while (window.isOpen())
     {
+        // Calculation of lag.
         int delta_time = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - previous_time).count();
 
+        // We keep adding delta into lag and when addition goes above fixed duration, we run next frame.
         lag += delta_time;
         previous_time += std::chrono::microseconds(delta_time);
 
+        // Game loop runs only after lag goes above Frame_duration.
         while(FRAME_DURATION <= lag)
         {
-            lag -= FRAME_DURATION;
+            lag -= FRAME_DURATION; // Restting lag to zero.
 
             while (window.pollEvent(event))
             {
@@ -81,34 +89,29 @@ int main()
                     window.close();
             }
 
+            // Game mechanics which calls update functions of ghost and pacman.
             if(!game_won && !pacman.get_dead())
             {
                 game_won = 1;
                 pacman.update(level, map);
                 ghost_manager.update(level, map, pacman);
 
+                // Checking each cell in the map.
                 for(const std::array<Cell, MAP_HEIGHT>& column : map)
                 {
                     for(const Cell& cell : column)
                     {
                         if(Cell::Pellet == cell)
                         {
+                            // If pellet is present, game_won = false.
                             game_won = 0;
                             break;
-                        }
-                        
-                        if(!game_won)
-                        {
-                            break;
-                        }
-                        else
-                        {
-                            pacman.set_animation_timer(0);
                         }
                     }
                 }
             }
 
+            // Restarting level if we die or starting next level if we win.
             else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Enter))
             {
                 game_won = 0;
@@ -122,6 +125,7 @@ int main()
                     level++;
                 }
 
+                // Funtion that converts sketch into map.
                 map = convert_sketch(map_sketch, ghost_positions, pacman);
 
                 ghost_manager.reset(level, ghost_positions);
@@ -129,10 +133,12 @@ int main()
                 pacman.reset();
             }
 
+            // Here we draw everything to our window i.e Pacman, Ghosts, Map, Pellet, Energizer.
             if(FRAME_DURATION > lag)
             {
                 window.clear();
 
+                // If pacman is dead or level won then we only draw text.
                 if(!game_won && !pacman.get_dead())
                 {
                     draw_map(map, window);
@@ -144,6 +150,7 @@ int main()
 
                 pacman.draw(game_won, window);
 
+                // Drawing text.
                 if( pacman.get_animation_over())
                 {
                     if(game_won)
